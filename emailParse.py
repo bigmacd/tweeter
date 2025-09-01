@@ -2,6 +2,7 @@ import email
 from email import policy
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import os
 import time
 
 from parseEmailSections import parseSections
@@ -19,6 +20,7 @@ def read_eml_file(file_path: str):
         with open(file_path, 'r', encoding='latin-1') as file:
             msg = email.message_from_file(file, policy=policy.default)
             return msg
+
 
 def extract_email_info(msg) -> dict:
 
@@ -75,6 +77,7 @@ def extract_email_info(msg) -> dict:
     
     return info
 
+
 def getEmailHtmlBody() -> str:
     # Replace with your .eml file path
     eml_file_path = "latest.eml"
@@ -91,6 +94,7 @@ def getEmailHtmlBody() -> str:
     except Exception as e:
         print(f"Error reading .eml file: {str(e)}")
 
+    os.remove(eml_file_path)
     return email_info['html_body']
 
 
