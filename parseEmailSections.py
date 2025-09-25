@@ -61,7 +61,11 @@ def parse_email_sections(html_content):
 def fixUpHref(href):
     # href is 'https://tracking.tldrnewsletter.com/CL0/https:%2F%2Fwww.bleepingcomputer.com%2Fnews%2Fsecurity%2Fnetherlands-citrix-netscaler-flaw-cve-2025-6543-exploited-to-breach-orgs%2F%3Futm_source=tldrinfosec/1/01000198a38abf5c-1df751a1-4ff3-45f8-9a34-6ef5f324d7f4-000000/yCsUCrlwhItaPww2IcSKVDOt_jS-GXFAehMaXQmiK1A=418'
     parts = href.split('https')
-    part = parts[2].replace('%2F', '/')
+    numParts = len(parts)
+    urlIndex = 2
+    if numParts == 2: # there is only one https
+        urlIndex = 1
+    part = parts[urlIndex].replace('%2F', '/')
     part = part.split('%3F')[0]
     return 'https' + part
 

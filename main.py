@@ -45,7 +45,7 @@ def main():
                     continue
                 break
 
-            time.sleep(10)
+            time.sleep(20)
     
 
 # Example usage

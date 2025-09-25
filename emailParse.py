@@ -77,10 +77,23 @@ def extract_email_info(msg) -> dict:
     
     return info
 
+def moveLatestEmlFile() -> None:
+    # Get a list of all .eml files in the current directory
+    eml_files = [f for f in os.listdir('c:\\Users\\marti\\Downloads') if f.endswith('.eml')]
+    
+    if not eml_files:
+        raise FileNotFoundError("No .eml files found in the current directory.")
+    
+    # Find the most recently modified .eml file
+    os.rename(f"c:\\Users\\marti\\Downloads\\{eml_files[0]}", "latest.eml")
+    #latest_file = max(eml_files, key=os.path.getmtime)
+    #return latest_file
+
 
 def getEmailHtmlBody() -> str:
     # Replace with your .eml file path
     eml_file_path = "latest.eml"
+    moveLatestEmlFile()
     
     try:
         # Read the .eml file
