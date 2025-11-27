@@ -35,25 +35,25 @@ def extract_email_info(msg) -> dict:
         'html_body': '',
         'attachments': []
     }
-    
+
     # Extract body content
     if msg.is_multipart():
         for part in msg.walk():
             content_type = part.get_content_type()
             content_disposition = str(part.get("Content-Disposition"))
-            
+
             # Extract text body
             if content_type == "text/plain" and "attachment" not in content_disposition:
                 body = part.get_payload(decode=True)
                 if body:
                     info['body'] = body.decode('utf-8', errors='ignore')
-            
+
             # Extract HTML body
             elif content_type == "text/html" and "attachment" not in content_disposition:
                 html_body = part.get_payload(decode=True)
                 if html_body:
                     info['html_body'] = html_body.decode('utf-8', errors='ignore')
-            
+
             # Extract attachments
             elif "attachment" in content_disposition:
                 filename = part.get_filename()
@@ -74,18 +74,19 @@ def extract_email_info(msg) -> dict:
             html_body = msg.get_payload(decode=True)
             if html_body:
                 info['html_body'] = html_body.decode('utf-8', errors='ignore')
-    
+
     return info
 
 def moveLatestEmlFile() -> None:
     # Get a list of all .eml files in the current directory
-    eml_files = [f for f in os.listdir('c:\\Users\\marti\\Downloads') if f.endswith('.eml')]
-    
+    latestEmlFileDir = os.environ.get("LATEST_EML_FILE_DIR", ".")
+    eml_files = [f for f in os.listdir(latestEmlFileDir) if f.endswith('.eml')]
+
     if not eml_files:
         raise FileNotFoundError("No .eml files found in the current directory.")
-    
+
     # Find the most recently modified .eml file
-    os.rename(f"c:\\Users\\marti\\Downloads\\{eml_files[0]}", "latest.eml")
+    os.rename(f"{latestEmlFileDir}/{eml_files[0]}", "./latest.eml")
     #latest_file = max(eml_files, key=os.path.getmtime)
     #return latest_file
 
@@ -94,14 +95,14 @@ def getEmailHtmlBody() -> str:
     # Replace with your .eml file path
     eml_file_path = "latest.eml"
     moveLatestEmlFile()
-    
+
     try:
         # Read the .eml file
         email_message = read_eml_file(eml_file_path)
-        
+
         # Extract email information
         email_info = extract_email_info(email_message)
-     
+
     except FileNotFoundError:
         print(f"Error: File '{eml_file_path}' not found.")
     except Exception as e:
